@@ -2,20 +2,21 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Ghost Paste - An Ephemeral Pastebin</title>
+        <title>Tic Tac Toe RTC Example</title>
         <link rel="stylesheet" href="css/app.css">
     </head>
     <body>
-        <div id='home'>
-            <h1>Welcome to Ghost Paste</h1>
-            <p id="status"></p>
-            <a id="answer" href="">Reply With This Link to Connect</a>
-        </div>
-        <div id='bin'>
-            <textarea id='content'>
-                Add your content here...
-            </textarea>
-            <a id="offer" href="">Share This Link to Allow Others to Connect</a>
+        <div id="content">
+            <div id='home'>
+                <p class="status"></p>
+                <a id="offer" href="">Share This Link to Allow Other Player to Connect</a>
+                <a id="answer" href="">Reply With This Link to Start the Game</a>
+            </div>
+            <div id='game'>
+                <p class="status"></p>
+                <div id='board'>
+                </div>
+            </div>
         </div>
         <script src="js/libs/adapter.js"></script>
         <script src="js/libs/jquery.js"></script>
