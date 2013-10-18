@@ -5,7 +5,8 @@ var AppRouter = Backbone.Router.extend({
     routes: {
         "": "homePage",
         "offer-:offer": "acceptOffer",
-        "answer-:answer": "acceptAnswer"
+        "answer-:answer": "acceptAnswer",
+        "bin-:id": "viewBin"
     },
     initialize: function () {
         this.sender = new RTCPeerConnection(servers, config);
@@ -14,6 +15,7 @@ var AppRouter = Backbone.Router.extend({
         this.channel = null;
         this.localOffer = null; 
         this.remoteOfffer = null;
+        this.bin = null;
         getUserMedia({audio:true, video:false, fake: true},
             _.bind(this.gotLocalStream, this), _.bind(this.reportFailure, this));
     },
@@ -22,8 +24,7 @@ var AppRouter = Backbone.Router.extend({
         $('#home #status').text('Creating a new bin...');
         $('#offer').attr('href', window.location.href + '#offer-' + hash);
         $('#offer').show();
-        $('#home').hide();
-        $('#bin').fadeIn();
+        this.navigate('bin-' + Math.random().toString(36).substring(7), {trigger: true});
     },
     acceptOffer: function (offer) {
         $('#home #status').text('Joining an existing bin...');
@@ -39,6 +40,13 @@ var AppRouter = Backbone.Router.extend({
         this.remoteOfffer = new RTCSessionDescription(JSON.parse(window.atob(answer)));
         this.sender.setRemoteDescription(this.remoteOfffer);
         this.sender.onicecandidate = _.bind(this.addIceCandidate, this, this.receiver);
+        $('#offer').hide();
+        this.navigate('bin-' + this.bin, {trigger: true});
+    },
+    viewBin: function (id) {
+        this.bin = id;
+        $('#home').hide();
+        $('#bin').fadeIn();
     },
     gotLocalStream: function (stream) {
         console.log("Got local stream.");
@@ -80,11 +88,17 @@ var AppRouter = Backbone.Router.extend({
         this.channel.onmessage = _.bind(this.gotMessage, this);
     },
     gotMessage: function (e) {
-        console.log("Got message", e.data);
+        var data = e.data
+        console.log("Got message", data);
+        if (!this.bin) {
+            // First message when the peer connects in the bin id
+            this.bin = data;
+            this.navigate('bin-' + this.bin, {trigger: true});
+        }
     },
     gotNewConnection: function (e) {
         console.log('New connection');
-        this.send('Welome!');
+        this.send(this.bin);
     },
     send: function(message) {
         this.channel.send(message);
