@@ -13,6 +13,7 @@ var GameView = Backbone.View.extend({
         this.piece = this.leader ? '#CD0000' : '#00688B';
         this.other = this.leader ? '#00688B' : '#CD0000';
         this.turn = this.leader;
+        $('.color', this.$el).css('background-color', this.piece);
         if (this.turn) {
             this.status('It is your turn.');
         } else {

@@ -44,3 +44,9 @@ body {
     color: #fff;
     font-size: 48px;
 }
+
+#game .color {
+   width: 15px;
+   height: 15px;
+   display: inline-block;
+}
